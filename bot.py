@@ -3,11 +3,15 @@ import json
 from telegram import Update, WebAppInfo
 from telegram.ext import Application, CommandHandler, ContextTypes, MessageHandler, filters
 from telegram import KeyboardButton, ReplyKeyboardMarkup
+from database import init_db, add_user, add_order, get_user_orders, get_stats
 
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
     level=logging.INFO
 )
+
+# Инициализируем БД
+init_db()
 
 TOKEN = '8593742013:AAFMA1cPDBSOCz1kWNwKk-lFjP2k4EnBLYs'
 
@@ -23,8 +27,12 @@ WEBAPP_URL = f"https://{GITHUB_USERNAME}.github.io/{GITHUB_REPO}"
 
 # /start
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    user_id = update.effective_user.id
-    user_name = update.effective_user.first_name
+    user = update.effective_user
+    user_id = user.id
+    user_name = user.first_name
+    
+    # Добавляем пользователя в БД
+    add_user(user_id, user.username or 'unknown', user.first_name, user.last_name or '')
     
     # Сохраняем ID пользователя
     context.user_data['user_id'] = user_id
@@ -72,6 +80,18 @@ async def info_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """
     await update.message.reply_text(info_text)
 
+# Команда /stats
+async def stats_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    stats = get_stats()
+    stats_text = f"""
+📊 Статистика:
+
+👥 Пользователей: {stats['users']}
+🛒 Заказов: {stats['orders']}
+💰 Доход: {stats['revenue']}₽
+    """
+    await update.message.reply_text(stats_text)
+
 # Обработчик данных из веб-приложения
 async def handle_web_app_data(update: Update, context: ContextTypes.DEFAULT_TYPE):
     try:
@@ -80,19 +100,23 @@ async def handle_web_app_data(update: Update, context: ContextTypes.DEFAULT_TYPE
             return
             
         data = json.loads(update.message.web_app_data.data)
+        user_id = update.effective_user.id
         
-        # Формируем ответ
-        order_text = "📋 Ваш заказ:\n\n"
-        
-        if 'order' in data:
+        # Добавляем заказ в БД
+        if 'order' in data and 'total' in data:
+            order_id = add_order(user_id, data['order'], data['total'])
+            
+            # Формируем ответ
+            order_text = "📋 Ваш заказ:\n\n"
+            
             for item in data['order']:
                 order_text += f"  • {item['name']} - {item['price']}₽\n"
-        
-        if 'total' in data:
+            
             order_text += f"\n💰 Итого: {data['total']}₽"
-        
-        await update.message.reply_text(order_text)
-        await update.message.reply_text("✅ Спасибо за заказ!\n⏱️ Он будет готов через 30 минут.")
+            order_text += f"\n📌 Номер заказа: #{order_id}"
+            
+            await update.message.reply_text(order_text)
+            await update.message.reply_text("✅ Спасибо за заказ!\n⏱️ Он будет готов через 30 минут.")
         
     except Exception as e:
         logging.error(f"Ошибка: {e}")
@@ -104,6 +128,7 @@ def main():
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CommandHandler("help", help_command))
     app.add_handler(CommandHandler("info", info_command))
+    app.add_handler(CommandHandler("stats", stats_command))
     
     # Обработчик веб-приложения - проверяем наличие web_app_data
     app.add_handler(MessageHandler(
@@ -114,6 +139,7 @@ def main():
     print("🤖 Бот запущен!")
     print(f"📱 Mini App URL: {WEBAPP_URL}")
     print(f"📚 Помощь: /help")
+    print(f"📊 Статистика: /stats")
     app.run_polling()
 
 if __name__ == '__main__':
