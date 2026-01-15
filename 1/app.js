@@ -222,12 +222,18 @@ document.head.appendChild(style);
 function showProfile() {
     console.log('showProfile вызвана');
     const modal = document.getElementById('profileModal');
+    
+    if (!modal) {
+        console.error('Modal не найден!');
+        return;
+    }
+    
     const profileInfo = document.getElementById('profileInfo');
     
     console.log('User data:', userData);
     
     if (!userData) {
-        profileInfo.innerHTML = '<p>Данные пользователя недоступны</p>';
+        profileInfo.innerHTML = '<p style="color: white;">Данные пользователя недоступны</p>';
     } else {
         const userId = userData.id || userData.user_id;
         profileInfo.innerHTML = `
@@ -256,12 +262,31 @@ function showProfile() {
         `;
     }
     
+    // Показываем модальное окно
+    modal.style.display = 'flex';
+    modal.style.alignItems = 'flex-end';
+    modal.style.justifyContent = 'center';
+    console.log('Modal показан');
+}
+            <div class="profile-item">
+                <label>Юзернейм</label>
+                <span>${userData.username || 'N/A'}</span>
+            </div>
+            <div class="profile-item">
+                <label>Статус</label>
+                <span>✅ Активный пользователь</span>
+            </div>
+            <button class="close-btn" onclick="showOrders('${userId}')">📋 История заказов</button>
+            <button class="close-btn" style="background: #0088cc;" onclick="closeProfile()">✕ Закрыть</button>
+        `;
+    }
+    
     modal.classList.add('show');
 }
 
 function closeProfile() {
     const modal = document.getElementById('profileModal');
-    modal.classList.remove('show');
+    modal.style.display = 'none';
 }
 
 // Закрытие модального окна при клике вне содержимого
