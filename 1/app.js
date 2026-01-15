@@ -1,8 +1,20 @@
 // Инициализация Telegram Web App
-let tg = window.Telegram.WebApp;
+let tg = window.Telegram?.WebApp || {};
 
 // Получаем данные пользователя
-let userData = tg.initDataUnsafe.user;
+let userData = tg.initDataUnsafe?.user || null;
+
+// Для локального тестирования создаем mock данные
+if (!userData) {
+    userData = {
+        id: 123456789,
+        first_name: 'Test',
+        last_name: 'User',
+        username: 'testuser',
+        is_bot: false
+    };
+    console.log('⚠️ Используются тестовые данные (нет Telegram)');
+}
 
 // При загрузке приложения
 document.addEventListener('DOMContentLoaded', function() {
@@ -78,12 +90,31 @@ function sendToBot() {
         return;
     }
 
+    const total = cart.reduce((sum, item) => sum + item.price, 0);
     const data = {
         order: cart,
-        total: cart.reduce((sum, item) => sum + item.price, 0),
+        total: total,
         timestamp: new Date().toISOString()
     };
 
+    // Сохраняем заказ в localStorage
+    const userId = userData?.id || userData?.user_id || 'unknown';
+    let ordersKey = `orders_${userId}`;
+    let orders = JSON.parse(localStorage.getItem(ordersKey) || '[]');
+    
+    orders.push({
+        items: cart,
+        total: total,
+        date: new Date().toISOString(),
+        status: 'pending'
+    });
+    
+    localStorage.setItem(ordersKey, JSON.stringify(orders));
+    
+    showNotification(`✅ Заказ принят! Сумма: ${total}₽`);
+    cart = []; // Очищаем корзину
+    updateTotal();
+    
     // Отправляем данные в бота
     tg.sendData(JSON.stringify(data));
 }
@@ -189,24 +220,20 @@ document.head.appendChild(style);
 
 // ФУНКЦИИ ПРОФИЛЯ
 function showProfile() {
+    console.log('showProfile вызвана');
     const modal = document.getElementById('profileModal');
     const profileInfo = document.getElementById('profileInfo');
     
-    // Получаем данные из localStorage или из Telegram
-    let userDataStr = localStorage.getItem('user_data');
-    let userData = userDataStr ? JSON.parse(userDataStr) : userData;
-    
-    if (!userData) {
-        userData = tg.initDataUnsafe.user;
-    }
+    console.log('User data:', userData);
     
     if (!userData) {
         profileInfo.innerHTML = '<p>Данные пользователя недоступны</p>';
     } else {
+        const userId = userData.id || userData.user_id;
         profileInfo.innerHTML = `
             <div class="profile-item">
                 <label>ID</label>
-                <span>${userData.id || userData.user_id}</span>
+                <span>${userId}</span>
             </div>
             <div class="profile-item">
                 <label>Имя</label>
@@ -218,12 +245,14 @@ function showProfile() {
             </div>
             <div class="profile-item">
                 <label>Юзернейм</label>
-                <span>${userData.username || userData.username || 'N/A'}</span>
+                <span>${userData.username || 'N/A'}</span>
             </div>
             <div class="profile-item">
                 <label>Статус</label>
                 <span>✅ Активный пользователь</span>
             </div>
+            <button class="close-btn" onclick="showOrders('${userId}')">📋 История заказов</button>
+            <button class="close-btn" style="background: #0088cc;" onclick="closeProfile()">✕ Закрыть</button>
         `;
     }
     
@@ -242,3 +271,42 @@ window.addEventListener('click', function(event) {
         closeProfile();
     }
 });
+
+// Показать историю заказов
+function showOrders(userId) {
+    const profileInfo = document.getElementById('profileInfo');
+    
+    // Получаем заказы из localStorage
+    let ordersStr = localStorage.getItem(`orders_${userId}`);
+    let orders = ordersStr ? JSON.parse(ordersStr) : [];
+    
+    if (orders.length === 0) {
+        profileInfo.innerHTML = `
+            <div style="text-align: center; padding: 30px;">
+                <p style="font-size: 40px; margin-bottom: 10px;">📭</p>
+                <p>У вас пока нет заказов</p>
+                <button class="close-btn" onclick="showProfile()" style="margin-top: 20px;">← Назад</button>
+            </div>
+        `;
+    } else {
+        let ordersHtml = '<div style="max-height: 400px; overflow-y: auto;">';
+        
+        orders.forEach((order, index) => {
+            ordersHtml += `
+                <div class="profile-item">
+                    <label>Заказ №${index + 1}</label>
+                    <div style="margin-top: 10px;">
+                        ${order.items.map(item => `<p style="margin: 5px 0;">• ${item.name} - ${item.price}₽</p>`).join('')}
+                    </div>
+                    <p style="margin-top: 10px; color: #2cab37; font-weight: 600;">Сумма: ${order.total}₽</p>
+                    <p style="margin-top: 5px; opacity: 0.7; font-size: 12px;">${new Date(order.date).toLocaleString('ru-RU')}</p>
+                </div>
+            `;
+        });
+        
+        ordersHtml += '</div>';
+        ordersHtml += '<button class="close-btn" onclick="showProfile()" style="margin-top: 15px;">← Назад</button>';
+        
+        profileInfo.innerHTML = ordersHtml;
+    }
+}
