@@ -21,15 +21,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Переход в меню
 function openMenu() {
-    document.getElementById('homeScreen').classList.remove('active');
-    document.getElementById('menuScreen').classList.add('active');
-    document.getElementById('backBtn').style.display = 'block';
-    
-    loadMenu();
+    window.location.href = '2/menu.html';
 }
 
 // Загрузить меню
-function loadMenu() {
+// function loadMenu() {
     const menu = [
         { name: '🍜 Плов', price: 150 },
         { name: '🍖 Шашлык', price: 200 },
