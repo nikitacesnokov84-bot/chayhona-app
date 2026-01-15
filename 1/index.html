@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Чайхона - Mini App</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+
+<div class="app">
+    <!-- Навигация -->
+    <div class="navbar">
+        <button class="back-btn" onclick="goBack()" style="display:none;" id="backBtn">← Назад</button>
+        <h1 class="navbar-title">Чайхона Самарканд</h1>
+    </div>
+
+    <!-- Главный экран -->
+    <div id="homeScreen" class="screen active">
+        <section class="hero">
+            <div class="overlay"></div>
+
+            <div class="header-info">
+                <span class="name">Чайхона Самарканд</span>
+                <span class="address">улица Вешняя, 9</span>
+            </div>
+
+            <div class="cards">
+                <div class="card">
+                    <span>близко</span>
+                    <strong>120 м</strong>
+                </div>
+
+                <div class="card out">
+                    <span>формат</span>
+                    <strong>Dine-in</strong>
+                </div>
+
+                <div class="card time-card">
+                    <span class="time-label" id="timeLabel">закрытия</span>
+                    <strong class="time-value" id="timeValue">20:30</strong>
+                </div>
+            </div>
+
+            <button onclick="openMenu()" class="order-btn">Закажу здесь 🍽️</button>
+            <button onclick="sendData()" class="order-btn secondary">Отправить данные 📤</button>
+        </section>
+    </div>
+
+    <!-- Меню экран -->
+    <div id="menuScreen" class="screen">
+        <h2>Меню</h2>
+        <div id="menuItems"></div>
+    </div>
+</div>
+
+<script src="time.js"></script>
+<script src="app.js"></script>
+
+</body>
+</html>

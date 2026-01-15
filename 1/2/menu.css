@@ -1,0 +1,146 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: #000;
+    height: 100%;
+    overflow-x: hidden; /* Отключаем горизонтальную прокрутку на уровне всего тела */
+}
+
+/* ===== ЦЕНТРАЛЬНЫЙ БЛОК С ФОНОМ ===== */
+.menu-page {
+    max-width: 420px;
+    margin: 0 auto;
+    min-height: 100vh; /* На всю высоту экрана */
+    background: url("image.webp") center center / cover no-repeat; /* Убедитесь, что у вас правильный путь к изображению */
+    position: relative;
+    padding-bottom: 50px; /* Добавляем отступ снизу, чтобы фон был виден при прокрутке */
+    overflow-x: hidden; /* Убираем горизонтальную прокрутку внутри menu-page */
+}
+
+/* затемнение поверх фона */
+.menu-page::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        to bottom,
+        rgba(0, 0, 0, 0.15),
+        rgba(0, 0, 0, 0.35)
+    );
+    z-index: 0;
+}
+
+/* ===== КОНТЕНТ ===== */
+.app {
+    position: relative;
+    z-index: 1;
+    padding: 24px 16px 60px;
+}
+
+/* ===== КАТЕГОРИИ ===== */
+.categories {
+    display: flex;
+    overflow-x: auto; /* позволяет прокручивать, но полоска прокрутки будет скрыта */
+    gap: 10px;
+    margin-bottom: 24px;
+    -ms-overflow-style: none;  /* Для старых версий IE */
+    scrollbar-width: none; /* Для Firefox */
+    width: 100%; /* Ограничиваем ширину контейнера для категорий */
+}
+
+.categories::-webkit-scrollbar {
+    display: none; /* Для Chrome, Safari */
+}
+
+.category-button {
+    padding: 8px 16px;
+    background-color: rgba(255, 255, 255, 0.3);
+    color: white;
+    font-size: 16px;
+    border: none;
+    border-radius: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.category-button:hover {
+    background-color: rgba(255, 255, 255, 0.6);
+}
+
+.category-button.active {
+    background-color: rgba(255, 255, 255, 0.8);
+}
+
+/* ===== ЗАГОЛОВОК ===== */
+.menu-title {
+    color: #000;
+    font-size: 26px;
+    font-weight: 700;
+    margin-bottom: 24px;
+    text-align: center;
+}
+
+/* ===== СЕТКА ===== */
+.menu-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+}
+
+/* ===== КАРТОЧКИ ===== */
+.card {
+    width: 100%;
+    aspect-ratio: 1 / 1.35;
+    background: rgba(255, 255, 255, 0.14);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border-radius: 26px;
+    box-shadow:
+        0 10px 20px rgba(0,0,0,0.2),
+        inset 0 1px 0 rgba(255,255,255,0.3);
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    color: #fff;
+    text-align: center;
+}
+
+/* ===== КРУГЛАЯ ИКОНКА ===== */
+.drink-icon {
+    width: 64px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.drink-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* ===== ОБЫЧНЫЕ КАРТИНКИ ===== */
+.drink-img {
+    width: 100px;
+    height: auto;
+    margin-top: 12px;
+}
+
+/* ===== ТЕКСТ ===== */
+.card span {
+    font-size: 14px;
+    opacity: 0.95;
+}
+
+.card strong {
+    font-size: 15px;
+    font-weight: 700;
+}

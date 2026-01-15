@@ -1,0 +1,296 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: #000;
+}
+
+.app {
+    max-width: 420px;
+    margin: 0 auto;
+}
+
+/* фон */
+.hero {
+    position: relative;
+    height: 100vh;
+    background: url("image.png") center / cover no-repeat;
+}
+
+/* затемнение */
+.overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        to top,
+        rgba(0, 0, 0, 0.6),
+        rgba(0, 0, 0, 0.25)
+    );
+}
+
+/* контейнер карточек */
+.cards {
+    position: absolute;
+    right: 16px;
+    top: 130px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    z-index: 2;
+}
+
+.card {
+    width: 88px;
+    height: 88px;
+    padding: 10px;
+    border-radius: 20px;
+
+    /* Прозрачный фон с небольшим затемнением для эффекта стеклянности */
+    background: rgba(255, 255, 255, 0.1);
+
+    /* Применяем размытие фона для стеклянного эффекта */
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+
+    /* Добавляем мягкие тени для контраста и глубины */
+    box-shadow:
+        0 4px 12px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    color: rgba(60, 60, 60, 0.9);
+}
+
+.card span {
+    font-size: 11px;
+    opacity: 0.6;
+}
+
+.card strong {
+    font-size: 16px;
+    margin-top: 2px;
+}
+
+/* Для карточки с эффектом выпирания */
+.card.out {
+    transform: translateX(-90px);
+    background: rgba(255, 255, 255, 0.15);
+}
+
+/* ========================= */
+/* ДОБАВЛЕНО ДЛЯ КАРТОЧКИ ВРЕМЕНИ */
+/* ========================= */
+
+/* карточка времени */
+.time-card {
+    position: relative;
+    background: rgba(255, 255, 255, 0.14);  /* Такой же полупрозрачный фон */
+    backdrop-filter: blur(16px); /* Размытие */
+    -webkit-backdrop-filter: blur(16px); /* Поддержка для Safari */
+    box-shadow:
+        0 6px 16px rgba(0, 0, 0, 0.18), /* Тень */
+        inset 0 1px 0 rgba(255, 255, 255, 0.25); /* Внутренняя тень */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: #fff; /* Белый цвет текста */
+}
+
+/* иконка */
+.time-icon {
+    position: absolute;
+    top: 7px;
+    left: 20%;
+    transform: translateX(-50%);
+    width: 25px;
+    height: 25px;
+    opacity: 0.9;
+}
+
+/* "до закрытия" */
+.time-label {
+    margin-top: 18px;
+    font-size: 12px;
+    line-height: 1.05;
+    font-weight: 500;
+    color: #fff;
+    opacity: 0.85;
+    text-align: left; /* Выравнивание текста по левому краю */
+    transform: translateY(-4px); /* ПОДНЯТЬ ВВЕРХ */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    width: 100%; /* Убедимся, что контейнер имеет полную ширину */
+}
+
+/* Сдвигаем слово "до" влево */
+.time-label::before {
+    content: "до"; /* текст "до" */
+    display: block;
+    margin-left: 0px; /* Сдвигаем влево еще больше */
+}
+
+/* Вторая строка с "закрытия" */
+.time-label span {
+    display: block;
+    margin-top: 4px; /* отступ от "до" */
+    margin-left: -12px; /* Добавляем сдвиг влево для "закрытия" */
+}
+
+/* время */
+.time-value {
+    margin-top: 4px;
+    font-size: 22px;
+    font-weight: 1000;
+    color: #fff;
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum";
+
+    text-align: left;
+    width: 100%;
+    transform: translate( 22px, -4px) /* СМЕЩЕНИЕ */
+    scaleX(1.7);
+}
+
+/* убираем перенос строки */
+.time-label br {
+    display: none;
+}
+
+/* кнопка */
+.order-btn {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 58%;
+    max-width: 270px;
+    padding: 12px 20px;
+
+    background: rgba(245, 245, 245, 0.95);
+    color: #2f2f2f;
+    text-align: center;
+
+    font-size: 16px;
+    font-weight: 600;
+
+    border-radius: 30px;
+    text-decoration: none;
+    cursor: pointer;
+
+    box-shadow: 0 12px 26px rgba(0, 0, 0, 0.3);
+}
+
+/* hover без скачков */
+.order-btn:hover {
+    background: rgba(255, 255, 255, 1);
+}
+
+/* ========================= */
+/* СТИЛИ ДЛЯ КАРТОЧЕК "БЛИЖАЙШАЯ" И "ФОРМАТ" */
+/* ========================= */
+
+/* Для карточки ближайшая */
+.card:nth-child(1), /* ближайшая */
+.card:nth-child(2) { /* формат */
+    background: rgba(255, 255, 255, 0.14);  /* Такой же полупрозрачный фон как у карточки времени */
+    backdrop-filter: blur(16px); /* Размытие */
+    -webkit-backdrop-filter: blur(16px); /* Поддержка для Safari */
+    box-shadow:
+        0 6px 16px rgba(0, 0, 0, 0.18), /* Тень */
+        inset 0 1px 0 rgba(255, 255, 255, 0.25); /* Внутренняя тень */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: #fff; /* Белый цвет текста */
+}
+
+/* ========================= */
+/* ========================= */
+/* Стили для текста "формат" */
+.card:nth-child(2) span {
+    font-size: 12px; /* Устанавливаем размер шрифта для текста "формат" */
+    margin-left: -22px; /* Сдвигаем текст "формат" влево */
+    margin-bottom: 3px; /* Уменьшаем промежуток между "формат" и "Dine-in" */
+    margin-top: 5px; /* Опускаем "формат" ниже, устанавливаем отступ сверху */
+    letter-spacing: 1px; /* Увеличиваем расстояние между буквами */
+}
+
+/* Стили для текста "Dine-in" */
+.card:nth-child(2) strong {
+    font-size: 12px; /* Устанавливаем размер шрифта для "Dine-in" */
+    margin-top: 0; /* Убираем отступ сверху для "Dine-in" */
+    margin-left: -35px; /* Сдвигаем "Dine-in" влево на тот же сдвиг, что и "формат" */
+    color: #fff; /* Белый цвет текста */
+    opacity: 0.85; /* Полупрозрачность */
+    text-align: left; /* Выровняем по левому краю */
+    font-weight: 1000; /* Толщина шрифта */
+    transform: translate(16px, 0) scaleX(1.4) scaleY(1.6); /* Убираем вертикальное смещение */
+    letter-spacing: 1px; /* Увеличиваем расстояние между буквами для текста "Dine-in" */
+}
+
+/* Стили для текста "ближайшая" */
+.card:nth-child(1) span {
+    font-size: 12px; /* Устанавливаем размер шрифта для текста "ближайшая" */
+    margin-left: -28px; /* Сдвигаем текст "ближайшая" влево */
+    margin-bottom: 3px; /* Уменьшаем промежуток между "ближайшая" и "120 м" */
+    margin-top: 5px; /* Опускаем "ближайшая" ниже */
+    letter-spacing: 1px; /* Увеличиваем расстояние между буквами */
+}
+
+/* Стили для текста "120 м" */
+.card:nth-child(1) strong {
+    font-size: 12px; /* Устанавливаем размер шрифта для "120 м" */
+    margin-top: 0; /* Убираем отступ сверху для "120 м" */
+    margin-left: -35px; /* Сдвигаем "120 м" влево */
+    color: #fff; /* Белый цвет текста */
+    opacity: 0.85; /* Полупрозрачность */
+    text-align: left; /* Выровняем по левому краю */
+    font-weight: 1000; /* Толщина шрифта */
+    transform: translate(10px, 0) scaleX(1.4) scaleY(1.6); /* Убираем вертикальное смещение */
+    letter-spacing: 1px; /* Увеличиваем расстояние между буквами для текста "120 м" */
+}
+/* Стили для блока с названием и адресом */
+/* Стили для блока с названием и адресом */
+.header-info {
+    position: absolute;
+    top: 30px; /* Расстояние от верхнего края */
+    left: 50%;
+    transform: translateX(-50%); /* Центрируем по горизонтали */
+    z-index: 2;
+    text-align: center; /* Центрируем текст */
+    display: flex;
+    flex-direction: column; /* Располагаем элементы в колонку */
+    align-items: center; /* Выравниваем по центру */
+}
+
+/* Стили для названия "Чайхона Самарканд" */
+.header-info .name {
+    font-size: 20px; /* Размер шрифта для названия */
+    font-weight: bold; /* Жирный шрифт */
+    color: #fff; /* Белый цвет */
+    letter-spacing: 1px; /* Немного увеличим расстояние между буквами */
+    margin-bottom: 4px; /* Отступ между названием и улицей */
+    white-space: nowrap; /* Запрещаем перенос текста на другую строку */
+}
+
+/* Стили для адреса */
+.header-info .address {
+    font-size: 12px; /* Размер шрифта для улицы */
+    color: #fff; /* Белый цвет */
+    opacity: 0.8; /* Полупрозрачность */
+    font-weight: 500; /* Умеренная толщина шрифта */
+    letter-spacing: 1px; /* Расстояние между буквами */
+    margin-top: 4px; /* Отступ сверху для улицы */
+}
