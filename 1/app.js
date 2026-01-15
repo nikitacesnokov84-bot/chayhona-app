@@ -1,6 +1,9 @@
 // Инициализация Telegram Web App
 let tg = window.Telegram.WebApp;
 
+// Получаем данные пользователя
+let userData = tg.initDataUnsafe.user;
+
 // При загрузке приложения
 document.addEventListener('DOMContentLoaded', function() {
     // Инициализируем Telegram Web App
@@ -15,9 +18,30 @@ document.addEventListener('DOMContentLoaded', function() {
     // При клике на основную кнопку Telegram
     tg.MainButton.onClick(sendToBot);
 
+    // Отправляем данные авторизации на сервер
+    if (userData) {
+        sendAuthData(userData);
+    }
+
     console.log('Mini App инициализирован');
-    console.log('User ID:', tg.initData);
+    console.log('User ID:', userData?.id);
 });
+
+// Отправка данных авторизации
+function sendAuthData(user) {
+    const authData = {
+        user_id: user.id,
+        username: user.username || 'Unknown',
+        first_name: user.first_name,
+        last_name: user.last_name,
+        is_bot: user.is_bot,
+        timestamp: new Date().toISOString()
+    };
+    
+    console.log('Отправляю данные авторизации:', authData);
+    // Данные сохраняются в localStorage для использования в приложении
+    localStorage.setItem('user_data', JSON.stringify(authData));
+}
 
 // Переход в меню
 function openMenu() {
@@ -65,7 +89,7 @@ function sendToBot() {
 }
 
 // Альтернативная функция для отправки
-function sendData() {
+function sendData() 
 
 // Уведомление
 function showNotification(text) {

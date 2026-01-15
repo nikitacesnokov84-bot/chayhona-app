@@ -23,6 +23,13 @@ WEBAPP_URL = f"https://{GITHUB_USERNAME}.github.io/{GITHUB_REPO}"
 
 # /start
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    user_id = update.effective_user.id
+    user_name = update.effective_user.first_name
+    
+    # Сохраняем ID пользователя
+    context.user_data['user_id'] = user_id
+    context.user_data['username'] = user_name
+    
     keyboard = [
         [KeyboardButton(
             text="🚀 Открыть Mini App",
@@ -36,7 +43,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     )
 
     await update.message.reply_text(
-        "👋 Привет! Нажми кнопку ниже чтобы открыть приложение",
+        f"👋 Привет, {user_name}!\n\nНажми кнопку ниже чтобы открыть приложение",
         reply_markup=reply_markup
     )
 
