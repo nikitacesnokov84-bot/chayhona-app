@@ -21,7 +21,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Переход в меню
 function openMenu() {
-    window.location.href = '2/menu.html';
+    // Используем openLink для работы с Telegram Mini App
+    const menuUrl = window.location.href.replace('index.html', '') + '2/menu.html';
+    tg.openLink(menuUrl);
 }
 
 // Переход назад
