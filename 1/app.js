@@ -186,3 +186,51 @@ style.textContent = `
     }
 `;
 document.head.appendChild(style);
+
+// ФУНКЦИИ ПРОФИЛЯ
+function showProfile() {
+    const modal = document.getElementById('profileModal');
+    const profileInfo = document.getElementById('profileInfo');
+    
+    // Получаем данные из localStorage или из Telegram
+    let userDataStr = localStorage.getItem('user_data');
+    let userData = userDataStr ? JSON.parse(userDataStr) : userData;
+    
+    if (!userData) {
+        userData = tg.initDataUnsafe.user;
+    }
+    
+    if (!userData) {
+        profileInfo.innerHTML = '<p>Данные пользователя недоступны</p>';
+    } else {
+        profileInfo.innerHTML = `
+            <div class="profile-item">
+                <label>ID</label>
+                <span>${userData.id || userData.user_id}</span>
+            </div>
+            <div class="profile-item">
+                <label>Имя</label>
+                <span>${userData.first_name || 'N/A'}</span>
+            </div>
+            <div class="profile-item">
+                <label>Фамилия</label>
+                <span>${userData.last_name || 'N/A'}</span>
+            </div>
+            <div class="profile-item">
+                <label>Юзернейм</label>
+                <span>${userData.username || userData.username || 'N/A'}</span>
+            </div>
+            <div class="profile-item">
+                <label>Статус</label>
+                <span>✅ Активный пользователь</span>
+            </div>
+        `;
+    }
+    
+    modal.classList.add('show');
+}
+
+function closeProfile() {
+    const modal = document.getElementById('profileModal');
+    modal.classList.remove('show');
+}

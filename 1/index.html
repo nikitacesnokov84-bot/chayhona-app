@@ -10,6 +10,9 @@
 <body>
 
 <div class="app">
+    <!-- Кнопка профиля -->
+    <button class="profile-btn" onclick="showProfile()">👤</button>
+    
     <!-- Главный экран -->
     <div id="homeScreen" class="screen active">
         <section class="hero">
@@ -45,6 +48,15 @@
     <div id="menuScreen" class="screen">
         <h2>Меню</h2>
         <div id="menuItems"></div>
+    </div>
+    
+    <!-- Модальное окно профиля -->
+    <div id="profileModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeProfile()">&times;</span>
+            <h2>Профиль пользователя</h2>
+            <div id="profileInfo"></div>
+        </div>
     </div>
 </div>
 
