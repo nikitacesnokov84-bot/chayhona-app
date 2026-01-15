@@ -28,13 +28,6 @@ function openMenu() {
     loadMenu();
 }
 
-// Назад в главное меню
-function goBack() {
-    document.getElementById('menuScreen').classList.remove('active');
-    document.getElementById('homeScreen').classList.add('active');
-    document.getElementById('backBtn').style.display = 'none';
-}
-
 // Загрузить меню
 function loadMenu() {
     const menu = [
@@ -93,18 +86,6 @@ function sendToBot() {
 
 // Альтернативная функция для отправки
 function sendData() {
-    if (cart.length === 0) {
-        alert('Добавьте товары в корзину!');
-        return;
-    }
-
-    const data = {
-        order: cart,
-        total: cart.reduce((sum, item) => sum + item.price, 0)
-    };
-
-    alert('Заказ: ' + JSON.stringify(data, null, 2));
-}
 
 // Уведомление
 function showNotification(text) {

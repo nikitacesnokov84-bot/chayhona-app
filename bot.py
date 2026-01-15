@@ -14,8 +14,8 @@ TOKEN = '8593742013:AAFMA1cPDBSOCz1kWNwKk-lFjP2k4EnBLYs'
 # ЗАМЕНИТЕ НА ВАШІ ДАННЫЕ GITHUB:
 # USERNAME - ваше имя пользователя GitHub
 # REPO - название вашего репозитория
-GITHUB_USERNAME = "serafim"  # ИЗМЕНИТЕ
-GITHUB_REPO = "chaykhona-app"  # ИЗМЕНИТЕ
+GITHUB_USERNAME = "nikitacesnokov84-bot"
+GITHUB_REPO = "chayhona-app"
 WEBAPP_URL = f"https://{GITHUB_USERNAME}.github.io/{GITHUB_REPO}"
 
 # Для локального тестирования раскомментируйте:
@@ -68,6 +68,10 @@ async def info_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
 # Обработчик данных из веб-приложения
 async def handle_web_app_data(update: Update, context: ContextTypes.DEFAULT_TYPE):
     try:
+        # Проверяем есть ли data из веб-приложения
+        if not update.message.web_app_data:
+            return
+            
         data = json.loads(update.message.web_app_data.data)
         
         # Формируем ответ
@@ -85,7 +89,6 @@ async def handle_web_app_data(update: Update, context: ContextTypes.DEFAULT_TYPE
         
     except Exception as e:
         logging.error(f"Ошибка: {e}")
-        await update.message.reply_text("❌ Ошибка при обработке заказа")
 
 def main():
     app = Application.builder().token(TOKEN).build()
@@ -95,8 +98,11 @@ def main():
     app.add_handler(CommandHandler("help", help_command))
     app.add_handler(CommandHandler("info", info_command))
     
-    # Обработчик веб-приложения
-    app.add_handler(MessageHandler(filters.WEB_APP_DATA, handle_web_app_data))
+    # Обработчик веб-приложения - проверяем наличие web_app_data
+    app.add_handler(MessageHandler(
+        filters.Regex(".*") & ~filters.COMMAND,
+        handle_web_app_data
+    ))
     
     print("🤖 Бот запущен!")
     print(f"📱 Mini App URL: {WEBAPP_URL}")
