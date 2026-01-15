@@ -24,27 +24,9 @@ function openMenu() {
     window.location.href = '2/menu.html';
 }
 
-// Загрузить меню
-// function loadMenu() {
-    const menu = [
-        { name: '🍜 Плов', price: 150 },
-        { name: '🍖 Шашлык', price: 200 },
-        { name: '🥗 Салат', price: 80 },
-        { name: '☕ Чай', price: 30 },
-        { name: '🫖 Чай с фруктами', price: 40 }
-    ];
-
-    let html = '';
-    menu.forEach(item => {
-        html += `
-            <div class="menu-item">
-                <span>${item.name}</span>
-                <button onclick="addToCart('${item.name}', ${item.price})">+${item.price}₽</button>
-            </div>
-        `;
-    });
-
-    document.getElementById('menuItems').innerHTML = html;
+// Переход назад
+function goBack() {
+    window.history.back();
 }
 
 let cart = [];
