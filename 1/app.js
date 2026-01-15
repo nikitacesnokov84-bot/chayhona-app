@@ -234,3 +234,11 @@ function closeProfile() {
     const modal = document.getElementById('profileModal');
     modal.classList.remove('show');
 }
+
+// Закрытие модального окна при клике вне содержимого
+window.addEventListener('click', function(event) {
+    const modal = document.getElementById('profileModal');
+    if (event.target === modal) {
+        closeProfile();
+    }
+});
